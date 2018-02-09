@@ -22,7 +22,7 @@ class VegaTree(object):
         edge_spec = _schema.EDGE_TRANSFORM_SPEC
         node_spec = _schema.NODE_GROUPING_TRANSFORM_SPEC
 
-        schema['data'] += [tree_spec, edge_spec, node_spec]
+        schema['data'] += [tree_spec, edge_spec] + node_spec
         self._schema = schema
 
     @property

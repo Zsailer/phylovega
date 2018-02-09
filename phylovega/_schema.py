@@ -1,7 +1,7 @@
 BASE_SPEC = {
     "$schema": "https://vega.github.io/schema/vega/v3.0.json",
     "width": 500,
-    "height":3000,
+    "height":300,
     "padding": 0,
 
     # -------------- SCALES -------------
