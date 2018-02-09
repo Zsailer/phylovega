@@ -17,16 +17,16 @@ BASE_SPEC = {
                 "step": 50
             }
         },
-        # {
-        #     "name": "heightScale",
-        #     "value": 100,
-        #     "bind": {
-        #         "input": "range",
-        #         "min": 0,
-        #         "max": 100,
-        #         "step": 5
-        #     }
-        # }
+        {
+            "name": "heightScale",
+            "value": 100,
+            "bind": {
+                "input": "range",
+                "min": 0,
+                "max": 100,
+                "step": 5
+            }
+        }
     ],
 
     "scales": [
@@ -100,6 +100,12 @@ TREE_TRANSFORM_SPEC = {
             "type": "tree",
             "method": "cluster",
             "size": [{"signal": "height"}, {"signal": "width - 100"}],
+            "as": ["y0", "x0", "depth0", "children0"]
+        },
+        {
+            "type": "tree",
+            "method": "cluster",
+            "size": [{"signal": "height"}, {"signal": "width - 100"}],
             "as": ["y", "x", "depth", "children"]
         },
         {
@@ -109,7 +115,7 @@ TREE_TRANSFORM_SPEC = {
         },
         {
             "type": "formula",
-            "expr": "datum.y ",
+            "expr": "datum.y0 * (heightScale / 100)",
             "as": "y"
         }
     ]
