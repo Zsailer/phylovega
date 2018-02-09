@@ -1,10 +1,33 @@
 BASE_SPEC = {
     "$schema": "https://vega.github.io/schema/vega/v3.0.json",
     "width": 500,
-    "height":300,
+    "height":1000,
     "padding": 0,
 
     # -------------- SCALES -------------
+
+    "signals": [
+        {
+            "name": "branchScale",
+            "value": 200,
+            "bind": {
+                "input": "range",
+                "min": 0,
+                "max": 500,
+                "step": 50
+            }
+        },
+        # {
+        #     "name": "heightScale",
+        #     "value": 100,
+        #     "bind": {
+        #         "input": "range",
+        #         "min": 0,
+        #         "max": 100,
+        #         "step": 5
+        #     }
+        # }
+    ],
 
     "scales": [
         {
@@ -35,6 +58,8 @@ BASE_SPEC = {
                 "enter": {
                     "size": {"value": 30},
                     "stroke": {"value": "#000"},
+                },
+                "update": {
                     "x": {"field": "x"},
                     "y": {"field": "y"},
                     "fill": {"value": "#000"},
@@ -64,6 +89,7 @@ BASE_SPEC = {
 
 TREE_TRANSFORM_SPEC = {
     "name": "tree",
+
     "transform": [
         {
             "type": "stratify",
@@ -78,12 +104,12 @@ TREE_TRANSFORM_SPEC = {
         },
         {
             "type": "formula",
-            "expr": "datum.distance * 200",
+            "expr": "datum.distance * branchScale",
             "as": "x"
         },
         {
             "type": "formula",
-            "expr": "datum.y",
+            "expr": "datum.y ",
             "as": "y"
         }
     ]

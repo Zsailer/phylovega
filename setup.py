@@ -13,7 +13,7 @@ from setuptools import find_packages, setup, Command
 
 # Package meta-data.
 NAME = 'phylovega'
-DESCRIPTION = 'Interactive Phylogenetic trees in Vega'
+DESCRIPTION = 'Interactive Phylogenetic trees in Vega from Python.'
 URL = 'https://github.com/Zsailer/phylovega'
 EMAIL = 'zachsailer@gmail.com'
 AUTHOR = 'Zach Sailer'

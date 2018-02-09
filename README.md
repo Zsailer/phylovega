@@ -10,6 +10,12 @@ PhyloVega defines a strict Vega specification that works best for phylogenetic t
 translates it to a Vega `data` field. It then creates a series of Vega
 `transform`s to construct a hierarchical tree visualization.
 
+## Why?
+
+Python is due for a simple, interactive phylogenetic tree viewer. Vega has done
+most of the heavy lifting here. PhyloVega simply leverages these powerful tools
+and gets simple interactivity for free!
+
 ## In the works
 
 Here is a list of features that will eventually make it into PhyloVega.
