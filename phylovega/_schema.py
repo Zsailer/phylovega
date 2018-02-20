@@ -1,8 +1,8 @@
 BASE_SPEC = {
-    "$schema": "https://vega.github.io/schema/vega/v3.0.json",
-    "width": 300,
-    "height":300,
-    "padding": 0,
+    "$schema": "https://vega.github.io/schema/vega/v3.json",
+    "width": 1000,
+    "height": 700,
+    "padding": 5,
 
     # -------------- SCALES -------------
 
@@ -26,7 +26,14 @@ BASE_SPEC = {
                 "max": 100,
                 "step": 5
             }
-        }
+        },
+        {
+            "name": "cladify",
+            "value": "datum",
+            "on": [
+                {"events": "@ancestor:mousedown, @ancestor:touchstart", "update": "datum"},
+            ]
+        },
     ],
 
     "scales": [
@@ -52,11 +59,12 @@ BASE_SPEC = {
             },
         },
         {
+            "name": "ancestor",
             "type": "symbol",
             "from": {"data": "nodes"},
             "encode": {
                 "enter": {
-                    "size": {"value": 30},
+                    "size": {"value": 70},
                     "stroke": {"value": "#000"},
                 },
                 "update": {
@@ -89,7 +97,39 @@ BASE_SPEC = {
 
 TREE_TRANSFORM_SPEC = {
     "name": "tree",
+    "transform": [
+        {
+            "type": "stratify",
+            "key": "id",
+            "parentKey": "parent"
+        },
+        {
+            "type": "tree",
+            "method": "cluster",
+            "size": [{"signal": "height"}, {"signal": "width - 100"}],
+            "as": ["y0", "x0", "depth0", "children0"]
+        },
+        {
+            "type": "tree",
+            "method": "cluster",
+            "size": [{"signal": "height"}, {"signal": "width - 100"}],
+            "as": ["y", "x", "depth", "children"]
+        },
+        {
+            "type": "formula",
+            "expr": "datum.distance * branchScale",
+            "as": "x"
+        },
+        {
+            "type": "formula",
+            "expr": "datum.y0 * (heightScale / 100)",
+            "as": "y"
+        },
+    ],
+}
 
+TREE0_TRANSFORM_SPEC = {
+    "name": "tree0",
     "transform": [
         {
             "type": "stratify",
@@ -120,6 +160,7 @@ TREE_TRANSFORM_SPEC = {
         }
     ]
 }
+
 
 EDGE_TRANSFORM_SPEC = {
     "name": "links",

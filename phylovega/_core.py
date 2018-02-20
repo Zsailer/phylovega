@@ -2,16 +2,20 @@ import json
 from vega3 import Vega
 from . import _schema
 
+from IPython.display import display
+
 class VegaTree(object):
     """Create an object that draws a Phylogenetic Tree using Vega.
     """
     def __init__(self, data=None):
         self.data = data
+        self.height = len(self.data[self.data['type'] == 'leaf']) * 20
         self._schema = None
         self._set_to_default_spec()
 
     def _set_to_default_spec(self):
         schema = _schema.BASE_SPEC
+        schema['height'] = self.height
         schema['data'] = []
 
         # Add data field
@@ -35,12 +39,11 @@ class VegaTree(object):
 
     def display(self):
         """Display the object"""
-        self.vega_object = Vega(self.schema)
-        self.vega_object.display()
+        display({"application/vnd.vega.v3+json": self._schema}, raw=True)
 
     def to_json(self, filename=None):
         """Write to JSON"""
-        s = json.dumps(self.schema)
+        s = json.dumps(self._schema)
 
         if filename is None:
             return s
