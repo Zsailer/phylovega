@@ -80,7 +80,7 @@ BASE_SPEC = {
             "encode": {
                 "enter": {
                     "fill": {"value": "#000"},
-                    "text": {"field": "label"},
+                    "text": {"field": "id"},
                 },
                 "update": {
                     "x": {"field": "x"},
