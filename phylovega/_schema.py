@@ -27,13 +27,6 @@ BASE_SPEC = {
                 "step": 5
             }
         },
-        {
-            "name": "cladify",
-            "value": "datum",
-            "on": [
-                {"events": "@ancestor:mousedown, @ancestor:touchstart", "update": "datum"},
-            ]
-        },
     ],
 
     "scales": [
@@ -127,40 +120,6 @@ TREE_TRANSFORM_SPEC = {
         },
     ],
 }
-
-TREE0_TRANSFORM_SPEC = {
-    "name": "tree0",
-    "transform": [
-        {
-            "type": "stratify",
-            "key": "id",
-            "parentKey": "parent"
-        },
-        {
-            "type": "tree",
-            "method": "cluster",
-            "size": [{"signal": "height"}, {"signal": "width - 100"}],
-            "as": ["y0", "x0", "depth0", "children0"]
-        },
-        {
-            "type": "tree",
-            "method": "cluster",
-            "size": [{"signal": "height"}, {"signal": "width - 100"}],
-            "as": ["y", "x", "depth", "children"]
-        },
-        {
-            "type": "formula",
-            "expr": "datum.distance * branchScale",
-            "as": "x"
-        },
-        {
-            "type": "formula",
-            "expr": "datum.y0 * (heightScale / 100)",
-            "as": "y"
-        }
-    ]
-}
-
 
 EDGE_TRANSFORM_SPEC = {
     "name": "links",
