@@ -8,7 +8,8 @@ class VegaTree(object):
     """Create an object that draws a Phylogenetic Tree using Vega.
     """
     def __init__(self, data=None):
-        self.data = data
+        self._data = data
+        self.data = data[['type', 'uid', 'id', 'distance', 'length', 'parent']]
         self.height = len(self.data[self.data['type'] == 'leaf']) * 20
         self._schema = None
         self._set_to_default_spec()

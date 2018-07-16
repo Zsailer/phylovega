@@ -2,18 +2,57 @@
 
 **Visualize phylogenetic trees in Vega from Python.**
 
+Declarative tree visualizations in Python powered by Vega.
+
+*Warning*: This package is still under heavy development and not ready for general use!
+
+**Declarative Grammar**
+
+```python
+from phylopandas import read_newick
+from phylovega.api import TreeChart
+
+# Read tree using PhyloPandas
+df = read_newick('tree.newick')
+
+# Construct Vega Specification
+chart = TreeChart(
+    df,
+    height_scale=200,
+
+    # Node attributes
+    node_size=200,
+    node_color="#ccc",
+
+    # Leaf attributes
+    leaf_labels="id",
+
+    # Edge attributes
+    edge_width=2,
+    edge_color="#000",
+)
+
+# Display in Jupyter
+chart.display()›
+```
+
+
+![](docs/static-example.png)
+
+**Interactive trees**
+
+Use Vega grammar
+
 ![](docs/phylovega-example.gif)
 
 ## How does it work?
 
-PhyloVega defines a strict Vega specification that works best for phylogenetic trees. It accepts a PhyloPandas DataFrame as input and
-translates it to a Vega `data` field. It then creates a series of Vega
-`transform`s to construct a hierarchical tree visualization.
+PhyloVega defines uses Vega grammar to draw phylogenetic trees. It accepts a PhyloPandas DataFrame as input and returns a Vega specification in JSON.
 
 ## Why?
 
 Python is due for a simple, interactive phylogenetic tree viewer. Vega has done
-most of the heavy lifting here. PhyloVega simply leverages these powerful tools
+most of the heavy lifting here. PhyloVega simply leverages Vega
 and gets simple interactivity for free!
 
 ## In the works
