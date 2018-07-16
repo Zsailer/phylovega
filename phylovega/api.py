@@ -11,25 +11,26 @@ class TreeChart(object):
     def __init__(
         self,
         data=None,
-        height=None,
-        width=None,
+        height_scale=100,
+        width_scale=100,
         **kwargs):
 
         # Attributes to fix.
-        self.width_scale=100
-        self.height_scale=100
-        self.height = height
-        self.width = width
+        self.width_scale=width_scale
+        self.height_scale=height_scale
         self.data = data
         self.attrs = kwargs
+
+        self.node_attrs = dict(
+
+        )
 
 
     def get_specification(self):
         specification = {}
         specification.update(
             **chart.get_chart_specification(
-                height=self.height,
-                width=self.width
+
             ),
             **marks.get_mark_specification(
                 **self.attrs
@@ -42,7 +43,30 @@ class TreeChart(object):
         )
         return specification
 
+
+    def encode_nodes(
+            self,
+            color="",
+
+            labels="id",
+            label_size=12,
+        ):
+        """
+        """
+        self.node_attrs.update(
+
+        )
+        return self
+
+    def encode_leafs():
+        """
+        """
+
+    def encode_edges():
+        """
+        """
+
     def display(self):
         """Fast tree drawing using Vega.
         """
-        display({"application/vnd.vega.v3+json": x.get_specification()}, raw=True)
+        display({"application/vnd.vega.v3+json": self.get_specification()}, raw=True)
