@@ -61,9 +61,19 @@ def get_topology_transform_specification(
     )
 
     # Cluster
+    step2_ = dict(
+        type="tree",
+        method="cluster",
+        size=[{"signal": "height"}, {"signal": "width - 100"}]
+    )
+    step2_["as"] = ["y0", "x0", "depth0", "children0"]
+
+    # Cluster
     step2 = dict(
         type="tree",
         method="cluster",
+        size=[{"signal": "height"}, {"signal": "width - 100"}]
+
     )
     step2["as"] = ["y", "x", "depth", "children"]
 
@@ -77,7 +87,7 @@ def get_topology_transform_specification(
     # Compute y positions
     step4 = dict(
         type="formula",
-        expr="datum.y * {}".format(height_scale),
+        expr="datum.y0 * ({} / 100)".format(height_scale),
     )
     step4["as"] = "y"
 
@@ -88,6 +98,7 @@ def get_topology_transform_specification(
         name="tree",
         transform=[
             step1,
+            step2_,
             step2,
             step3,
             step4
