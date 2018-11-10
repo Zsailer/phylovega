@@ -1,5 +1,5 @@
 from traitlets import TraitType
-
+from traitlets.config import Configurable
 
 class HexColorString(TraitType):
 
@@ -23,3 +23,14 @@ class HexColorString(TraitType):
         return value
 
 
+class VegaConfigurable(Configurable):
+    """Class hack to fix some problems I encountered with traitlets configurable.
+    """
+    def __init__(self, config=None, **kwargs):
+        super(VegaConfigurable, self).__init__(config=config, **kwargs)
+        
+        for name, value in config.items():
+            try: 
+                setattr(self, name, value)
+            except AttributeError: 
+                pass

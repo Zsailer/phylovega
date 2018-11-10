@@ -1,19 +1,22 @@
+from traitlets.config import Configurable
 from traitlets import (
-    HasTraits,
     Integer, 
     Unicode,
     List
 )
+from phylovega.traitlets import VegaConfigurable
 
-class TreeData(HasTraits):
+
+class TreeData(VegaConfigurable):
     """Object that constructs the Vega transformations
     needed to create a tree layout.
     """
-    width_scale = Integer(100, help="Width scale.")
-    height_scale = Integer(100, help="Height scale")
-    data = List(help="Data dictionary.")
+    width_scale = Integer(100, help="Width scale.", config=True)
+    height_scale = Integer(100, help="Height scale", config=True)
+    data = List(help="Data dictionary.", config=True)
 
-    def __init__(self, data):
+    def __init__(self, data, config=None, **kwargs):
+        super().__init__(config=config, **kwargs)
         self.data = data
 
     @property
@@ -80,14 +83,14 @@ class TreeData(HasTraits):
                 {
                     'type': 'tree',
                     'method': 'cluster',
-                    'size': [self.height_scale, self.width_scale],#{'signal': 'height'}, {'signal': 'width - 100'}],
+                    'size': [500, 500],#{'signal': 'height'}, {'signal': 'width - 100'}],
                     'as': ['y0', 'x0', 'depth0', 'children0']
                 },
                 {
                     'type': 'tree',
                     'method': 'cluster',
                     # {'signal': 'height'}, {'signal': 'width - 100'}],
-                    'size': [self.height_scale, self.width_scale],
+                    'size': [500, 500],
                     'as': ['y', 'x', 'depth', 'children']
                 },
                 {

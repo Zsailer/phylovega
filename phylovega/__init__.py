@@ -1,1 +1,1 @@
-from .main import TreeChart
+from .app import TreeChart

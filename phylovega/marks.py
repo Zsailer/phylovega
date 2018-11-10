@@ -1,22 +1,39 @@
+from traitlets.config import Configurable
 from traitlets import (
-    HasTraits,
     Unicode,
     Int
 )
-from phylovega.traitlets import HexColorString
+from phylovega.traitlets import HexColorString, VegaConfigurable
 
-class TreeMarks(HasTraits):
+
+class TreeMarks(VegaConfigurable):
     """Style the marks in the tree visualization."""
-    branch_color = HexColorString('#ccc', help='Color of tree edges.')
-    branch_width = Int(5, help='Width of the edges.')
-    node_size = Int(70, help='Size of the nodes.')
-    node_color = HexColorString('#000', help='Color of the nodes.')
-    node_labels = Unicode('id', help='Column to use for node labels.')
-    node_text_column = Unicode('id', help='Column to label the nodes.')
-    node_text_color = HexColorString('#000', help='Hex string for text color.')
-    leaf_text_color = HexColorString('#000', help='Hex string for text color.')
-    leaf_text_column = Unicode('id', help='Column to label the leafs.')
-    leaf_size = Int(0, help='Size of leaf node.')
+    branch_color = HexColorString(
+        '#ccc', help='Color of tree edges.', config=True)
+
+    branch_width = Int(5, help='Width of the edges.', config=True)
+
+    node_size = Int(70, help='Size of the nodes.').tag(config=True)
+
+    node_color = HexColorString(
+        '#000', help='Color of the nodes.', config=True)
+
+    node_labels = Unicode(
+        'id', help='Column to use for node labels.', config=True)
+
+    node_text_column = Unicode(
+        'id', help='Column to label the nodes.', config=True)
+
+    node_text_color = HexColorString(
+        '#000', help='Hex string for text color.', config=True)
+
+    leaf_text_color = HexColorString(
+        '#000', help='Hex string for text color.', config=True)
+
+    leaf_text_column = Unicode(
+        'id', help='Column to label the leafs.', config=True)
+
+    leaf_size = Int(0, help='Size of leaf node.', config=True)
 
     @property
     def branch_spec(self):
