@@ -4,20 +4,16 @@
 
 Declarative tree visualizations in Python powered by Vega.
 
-*Warning*: This package is still under heavy development and not ready for general use!
+*Warning*: This package is still under development. Things may still change rapidly.
 
 **Declarative Grammar**
 
 ```python
-from phylopandas import read_newick
-from phylovega.api import TreeChart
-
-# Read tree using PhyloPandas
-df = read_newick('tree.newick')
+from phylovega import TreeChart
 
 # Construct Vega Specification
-chart = TreeChart(
-    df,
+chart = TreeChart.read_newick(
+    'tree.newick',
     height_scale=200,
 
     # Node attributes
@@ -31,9 +27,6 @@ chart = TreeChart(
     edge_width=2,
     edge_color="#000",
 )
-
-# Display in Jupyter
-chart.display()›
 ```
 
 

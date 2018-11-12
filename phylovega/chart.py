@@ -24,7 +24,6 @@ class BaseTreeChart(VegaConfigurable):
         self.data = data
 
     def get_spec(self):
-        print(self.width)
         return { 
             'width' : self.width,
             'height': self.height,
