@@ -2,7 +2,8 @@ from traitlets.config import Configurable
 from traitlets import (
     Integer, 
     Unicode,
-    List
+    List,
+    default
 )
 from phylovega.traitlets import VegaConfigurable
 
@@ -12,6 +13,13 @@ class TreeData(VegaConfigurable):
     needed to create a tree layout.
     """
     width_scale = Integer(100, help="Width scale.", config=True)
+
+    @default('width_scale')
+    def _default_width_scale(self):
+        dist = [el['distance'] for el in self.data]
+        dist = max(dist)
+        return int(self.chart_width / dist)
+
     height_scale = Integer(100, help="Height scale", config=True)
     data = List(help="Data dictionary.", config=True)
 
@@ -72,6 +80,7 @@ class TreeData(VegaConfigurable):
     @property
     def data_transform_spec(self):
         """Layout specification as Python dictionary."""
+        print(self.width_scale)
         return {
             'name': 'tree',
             'values': self.data,
@@ -95,14 +104,14 @@ class TreeData(VegaConfigurable):
                 },
                 {
                     'type': 'formula',
-                    'expr': 'datum.distance * {}'.format(self.width_scale),
+                    'expr': '0.8 * datum.distance * {}'.format(self.width_scale),
                     'as': 'x'
                 },
-                {
-                    'type': 'formula',
-                    'expr': 'datum.y0 * ({} / 100)'.format(self.width_scale),
-                    'as': 'y'
-                }
+                # {
+                #     'type': 'formula',
+                #     'expr': 'datum.y0 * ({} / 100)'.format(self.width_scale),
+                #     'as': 'y'
+                # }
             ]
         }
 

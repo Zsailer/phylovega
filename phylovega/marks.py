@@ -20,13 +20,13 @@ class TreeMarkOptions(VegaConfigurable):
     branch_color = VegaColorOption(
         '#ccc', help='Color of tree edges.', config=True)
 
-    branch_width = VegaRangeOption(5, help='Width of the edges.', config=True)
+    branch_width = VegaRangeOption(2, help='Width of the edges.', config=True)
 
     # --------------------------------------------------------
     # Node traits.
     # --------------------------------------------------------
 
-    node_size = VegaRangeOption(70, help='Size of the nodes.').tag(config=True)
+    node_size = VegaRangeOption(50, help='Size of the nodes.').tag(config=True)
 
     node_edge_width = VegaRangeOption(
         1,
@@ -53,22 +53,16 @@ class TreeMarkOptions(VegaConfigurable):
         'id', help='Column to label the nodes.', config=True)
 
     node_text_xoffset = VegaRangeOption(
-        0,
+        4,
         help="Node text X offset.",
         config=True
     )
 
     node_text_yoffset = VegaRangeOption(
+        3,
         help="Node text Y offset.",
         config=True
     )
-
-    @default('node_text_yoffset')
-    def _default_node_text_yoffset(self):
-        try:
-            return -(self.node_text_size/3)
-        except:
-            return 0
 
     node_text_color = VegaColorOption(
         '#000', help='Hex string for text color.', config=True)
@@ -78,7 +72,7 @@ class TreeMarkOptions(VegaConfigurable):
     # --------------------------------------------------------
 
     leaf_size = VegaRangeOption(
-        70, help='Size of the leaves.').tag(config=True)
+        50, help='Size of the leaves.').tag(config=True)
 
     leaf_edge_width = VegaRangeOption(
         1,
@@ -108,25 +102,18 @@ class TreeMarkOptions(VegaConfigurable):
         'id', help='Column to label the leafs.', config=True)
 
     leaf_text_xoffset = VegaRangeOption(
-        0,
+        4,
         help="Leaf text X offset.",
         config=True
     )
 
     leaf_text_yoffset = VegaRangeOption(
+        3,
         help="Leaf text Y offset.",
         config=True
     )
 
     leaf_size = VegaRangeOption(0, help='Size of leaf node.', config=True)
-
-    @default('leaf_text_yoffset')
-    def _default_leaf_text_yoffset(self):
-        try:
-            return -(self.leaf_text_size/3)
-        except:
-            return 0
-
 
 
 class TreeMarks(TreeMarkOptions):

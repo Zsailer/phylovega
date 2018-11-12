@@ -108,7 +108,7 @@ class TreeChart(Application):
         self.start()
 
     def init_classes(self):
-        self.base_chart = BaseTreeChart(config=self.config)
+        self.base_chart = BaseTreeChart(data=self.data, config=self.config)
         self.tree_data = TreeData(
             data=self.data, 
             chart_height=self.base_chart.height,
