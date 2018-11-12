@@ -1,189 +1,250 @@
+from traitlets import (
+    Unicode,
+    Int,
+    Float,
+    default
+)
+from phylovega.traitlets import (
+    VegaConfigurable,
+    VegaColorOption,
+    VegaMenuOption,
+    VegaRangeOption
+)
 
-def get_mark_specification(
-    edge_color="#ccc",
-    edge_width=3,
-    node_size=70,
-    node_color="#000",
-    node_labels="id",
-    leaf_labels="id",
-    leaf_size=0,
-    leaf_color="#000"
-    ):
-    """
-    """
-    marks = []
 
-    edges = get_edge_specification(
-        edge_color=edge_color,
-        edge_width=edge_width,
+class TreeMarkOptions(VegaConfigurable):
+    # --------------------------------------------------------
+    # branch traits.
+    # --------------------------------------------------------
+
+    branch_color = VegaColorOption(
+        '#ccc', help='Color of tree edges.', config=True)
+
+    branch_width = VegaRangeOption(5, help='Width of the edges.', config=True)
+
+    # --------------------------------------------------------
+    # Node traits.
+    # --------------------------------------------------------
+
+    node_size = VegaRangeOption(70, help='Size of the nodes.').tag(config=True)
+
+    node_edge_width = VegaRangeOption(
+        1,
+        help='Node edge width',
+        config=True
     )
 
-    nodes = get_node_specification(
-        node_size=node_size,
-        node_color=node_color
+    node_edge_color = VegaColorOption(
+        '#000',
+        help="Color of node edge",
+        config=True
     )
 
-    leafs = get_leaf_specification(
-        leaf_size=leaf_size,
-        leaf_color=leaf_color
+    node_color = VegaColorOption(
+        '#000', help='Color of the nodes.', config=True)
+
+    node_labels = VegaMenuOption(
+        'id', help='Column to use for node labels.', config=True)
+
+    node_text_size = VegaRangeOption(
+        10, help="Node text size", config=True)
+
+    node_text_column = VegaMenuOption(
+        'id', help='Column to label the nodes.', config=True)
+
+    node_text_xoffset = VegaRangeOption(
+        0,
+        help="Node text X offset.",
+        config=True
     )
 
-    leaf_labels = get_leaf_text_specification(
-        leaf_labels=leaf_labels
+    node_text_yoffset = VegaRangeOption(
+        help="Node text Y offset.",
+        config=True
     )
 
-    node_labels = get_node_text_specification(
-        node_labels=node_labels
+    @default('node_text_yoffset')
+    def _default_node_text_yoffset(self):
+        try:
+            return -(self.node_text_size/3)
+        except:
+            return 0
+
+    node_text_color = VegaColorOption(
+        '#000', help='Hex string for text color.', config=True)
+
+    # --------------------------------------------------------
+    # Leaf traits
+    # --------------------------------------------------------
+
+    leaf_size = VegaRangeOption(
+        70, help='Size of the leaves.').tag(config=True)
+
+    leaf_edge_width = VegaRangeOption(
+        1,
+        help='leaf edge width',
+        config=True
     )
 
-    specification = dict(
-        marks=[
-            edges,
-            nodes,
-            leafs,
-            leaf_labels,
-            node_labels,
-        ]
-    )
-    return specification
-
-
-def get_edge_specification(
-    edge_color="#ccc",
-    edge_width=3
-    ):
-    """
-    """
-    # Build styles for edges.
-    style = dict(
-        path=dict(field="path"),
-        stroke=dict(
-            value=edge_color
-        ),
-        strokeWidth=dict(
-            value=edge_width
-        )
+    leaf_edge_color = VegaColorOption(
+        '#000',
+        help="Color of leaf edge",
+        config=True
     )
 
-    # Encode edge style.
-    encode = dict(update=style)
+    leaf_color = VegaColorOption(
+        '#000', help='Color of the leaves.', config=True)
 
-    # Construct full specification for edges.
-    specification = dict(
-        type="path",
-        encode=encode,
-    )
-    specification["from"] = dict(data="links")
-    return specification
+    leaf_labels = VegaMenuOption(
+        'id', help='Column to use for leaf labels.', config=True)
 
+    leaf_text_size = VegaRangeOption(
+        10, help="Leaf text size", config=True)
 
-def get_leaf_specification(
-    leaf_size=70,
-    leaf_color="#000",
-    ):
-    """
-    """
-    style = dict(
-        enter=dict(
-            size=dict(value=leaf_size),
-            stroke=dict(value='#000')
-        ),
-        update=dict(
-            x=dict(field="x"),
-            y=dict(field="y"),
-            fill=dict(value=leaf_color)
-        )
+    leaf_text_color = VegaColorOption(
+        '#000', help='Hex string for text color.', config=True)
+
+    leaf_text_column = VegaMenuOption(
+        'id', help='Column to label the leafs.', config=True)
+
+    leaf_text_xoffset = VegaRangeOption(
+        0,
+        help="Leaf text X offset.",
+        config=True
     )
 
-    specification = dict(
-        type="symbol",
-        encode=style
-    )
-    specification["from"]=dict(data="leaves")
-
-    return specification
-
-
-def get_node_specification(
-    node_size=70,
-    node_color="#000",
-    ):
-    """
-    """
-    style = dict(
-        enter=dict(
-            size=dict(value=node_size),
-            stroke=dict(value='#000')
-        ),
-        update=dict(
-            x=dict(field="x"),
-            y=dict(field="y"),
-            fill=dict(value=node_color)
-        )
+    leaf_text_yoffset = VegaRangeOption(
+        help="Leaf text Y offset.",
+        config=True
     )
 
-    specification = dict(
-        type="symbol",
-        encode=style
-    )
-    specification["from"]=dict(data="nodes")
+    leaf_size = VegaRangeOption(0, help='Size of leaf node.', config=True)
 
-    return specification
-
-
-def get_leaf_text_specification(
-    leaf_labels="id",
-    leaf_label_color="#000",
-    x_offset=2,
-    y_offset=3
-    ):
-    """
-    """
-    encode = dict(
-        enter=dict(
-            fill=dict(value=leaf_label_color),
-            text=dict(field=leaf_labels)
-        ),
-        update=dict(
-            x=dict(field="x"),
-            y=dict(field="y"),
-            dx=dict(value=x_offset),
-            dy=dict(value=y_offset)
-        )
-    )
-
-    specification = dict(
-        type="text",
-        encode=encode
-    )
-    specification["from"] = dict(data="leaves")
-    return specification
+    @default('leaf_text_yoffset')
+    def _default_leaf_text_yoffset(self):
+        try:
+            return -(self.leaf_text_size/3)
+        except:
+            return 0
 
 
-def get_node_text_specification(
-    node_labels="id",
-    node_label_color="#000",
-    x_offset=-3,
-    y_offset=4
-    ):
-    """
-    """
-    encode = dict(
-        enter=dict(
-            fill=dict(value=node_label_color),
-            text=dict(field=node_labels)
-        ),
-        update=dict(
-            x=dict(field="x"),
-            y=dict(field="y"),
-            dx=dict(value=x_offset),
-            dy=dict(value=y_offset)
-        )
-    )
 
-    specification = dict(
-        type="text",
-        encode=encode
-    )
-    specification["from"] = dict(data="nodes")
-    return specification
+class TreeMarks(TreeMarkOptions):
+    """Style the marks in the tree visualization."""
+
+    def vega_mark(self, name, value):
+        _, key = self.vega_input(name, value)
+        if key in ['value', 'field']:
+            return {key: value}
+        elif key in ['signal']:
+            return {key: name}
+
+    @property
+    def branch_spec(self):
+        """Branch specification represented by Python dictionary."""
+        return {
+            'type': 'path',
+            'from': {'data': 'links'},
+            'encode': {
+                'update': {
+                    'path': {'field': 'path'},
+                    'stroke': self.vega_mark('branch_color', self.branch_color),
+                    'strokeWidth': self.vega_mark('branch_width', self.branch_width),
+                }
+            }
+        }
+
+    @property
+    def leaf_spec(self):
+        """Leaf specification represented by Python dictionary."""
+        return {
+            'type': 'symbol',
+            'from': {'data': 'leaves'},
+            'encode':{
+                'enter': {
+                    'fill': self.vega_mark('leaf_color', self.leaf_color),
+                    'stroke': self.vega_mark('leaf_edge_color', self.leaf_edge_color)
+                },
+                'update': {
+                    'x': {'field': 'x'},
+                    'y': {'field': 'y'},
+                    'size': self.vega_mark('leaf_size', self.leaf_size),
+                    'strokeWidth': self.vega_mark('leaf_edge_width', self.leaf_edge_width)
+                }
+            }
+        }
+
+    @property
+    def node_spec(self):
+        """Node specification represented by Python dictionary."""
+        return {
+            'type': 'symbol',
+            'from': {'data': 'nodes'},
+            'encode': {
+                'enter': {
+                    'stroke': self.vega_mark('node_edge_color', self.node_edge_color),
+                },
+                'update': {
+                    'fill': self.vega_mark('node_color', self.node_color),
+                    'x': {'field': 'x'},
+                    'y': {'field': 'y'},
+                    'size': self.vega_mark('node_size', self.node_size),
+                    'strokeWidth': self.vega_mark('node_edge_width', self.node_edge_width)
+                }
+            }
+        }
+
+    @property
+    def leaf_text_spec(self):
+        """Leaf text specification represented by Python dictionary."""
+        return {
+            'type': 'text',
+            'from': {'data': 'leaves'},
+            'encode': {
+                'enter': {
+                    'fill': self.vega_mark('leaf_text_color', self.leaf_text_color),
+                    'text': self.vega_mark('leaf_text_column', self.leaf_text_column)
+                },
+                'update': {
+                    'fontSize': self.vega_mark('leaf_text_size', self.leaf_text_size),
+                    'x': {'field': 'x'},
+                    'y': {'field': 'y'},
+                    'dx': self.vega_mark('leaf_text_xoffset', self.leaf_text_xoffset),
+                    'dy': self.vega_mark('leaf_text_yoffset', self.leaf_text_yoffset)
+                }
+            }
+        }
+
+    @property
+    def node_text_spec(self):
+        """Node text specification represented by Python dictionary."""
+        return {
+            'type': 'text',
+            'from': {'data': 'nodes'},
+            'encode': {
+                'enter': {
+                    'fill': self.vega_mark('node_text_color', self.node_text_color),
+                    'text': self.vega_mark('node_text_column', self.node_text_column)
+                },
+                'update': {
+                    'fontSize': self.vega_mark('node_text_size', self.node_text_size),
+                    'x': {'field': 'x'},
+                    'y': {'field': 'y'},
+                    'dx': self.vega_mark('node_text_xoffset', self.node_text_xoffset),
+                    'dy': self.vega_mark('node_text_yoffset', self.node_text_yoffset)
+                }
+            }
+        }
+
+
+    def get_spec(self):
+        """Return spec."""
+        return {
+            'marks':[
+                self.branch_spec,
+                self.leaf_spec,
+                self.node_spec,
+                self.leaf_text_spec,
+                self.node_text_spec,
+            ]
+        }

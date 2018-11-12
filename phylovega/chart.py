@@ -1,16 +1,20 @@
+from traitlets.config import Configurable
+from traitlets import (
+    Integer,
+)
+from phylovega.traitlets import VegaConfigurable
 
 
-def get_chart_specification(
-    width=None,
-    height=None,
-    padding=5
-    ):
+class BaseTreeChart(VegaConfigurable):
+    """Object for specifying chart styling.
     """
-    """
-    specification = dict(
-        width=width,
-        height=height,
-        padding=padding,
-    )
+    width = Integer(500, help="Width of the tree chart.", config=True)
+    height = Integer(500, help="Height of the tree chart.", config=True)
+    padding = Integer(5, help="Padding around tree chart.", config=True)
 
-    return specification
+    def get_spec(self):
+        return { 
+            'width' : self.width,
+            'height': self.height,
+            'padding': self.padding
+        }
