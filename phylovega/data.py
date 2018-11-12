@@ -76,7 +76,6 @@ class TreeData(VegaConfigurable):
             'name': 'tree',
             'values': self.data,
             'transform': [
-                # Step 2: statify
                 {
                     'type': 'stratify',
                     'parentKey': 'parent',
@@ -85,13 +84,12 @@ class TreeData(VegaConfigurable):
                 {
                     'type': 'tree',
                     'method': 'cluster',
-                    'size': [self.chart_height, self.chart_width],#{'signal': 'height'}, {'signal': 'width - 100'}],
+                    'size': [self.chart_height, self.chart_width],
                     'as': ['y0', 'x0', 'depth0', 'children0']
                 },
                 {
                     'type': 'tree',
                     'method': 'cluster',
-                    # {'signal': 'height'}, {'signal': 'width - 100'}],
                     'size': [self.chart_height, self.chart_width],
                     'as': ['y', 'x', 'depth', 'children']
                 },

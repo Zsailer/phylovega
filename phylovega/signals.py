@@ -1,74 +1,49 @@
+from .marks import TreeMarkOptions
 
 
-# def get_signal_specification(
-#     length_slider=None,
-#     height_slider=None,
-#     ):
-#     """
-#     """
-#     signals = []
+class TreeSignals(TreeMarkOptions):
 
-#     if length_slider is not None:
-#         slider1 = get_length_slider(
-#             min=length_slider[0],
-#             max=length_slider[1],
-#             step=length_slider[2]
-#         )
-#         signals.append(slider1)
+    def vega_signal(self, name, value):
+        inp, key = self.vega_input(name, value)
+        if key == 'signal':
+            method = getattr(self, '{}_spec'.format(inp))
+            return method(name, value)
+        return None
 
-#     if height_slider is not None:
-#         slider2 = get_height_slider(
-#             min=height_slider[0],
-#             max=height_slider[1],
-#             step=height_slider[2]
-#         )
-#         signals.append(slider2)
+    def range_spec(self, name, value):
+        return {
+            'name': name,
+            'bind': {
+                'input': 'range',
+                'min': value[0],
+                'max': value[1],
+                #'step': 1
+            }
+        }
 
-#     specification = dict(
-#         signals=signals
-#     )
-#     return specification
+    def menu_spec(self, name, value):
+        return {
+            'name': name,
+            'bind': {
+                'input': 'select',
+                'options': value
+            }
+        }
 
+    def color_spec(self, name, value):
+        return {
+            'name': name,
+            'value': '#000',
+            'bind': {
+                'input': 'color'
+            }
+        }
 
-# def get_height_slider(
-#         min=0,
-#         max=500,
-#         step=50,
-#     ):
-#     """
-#     """
-#     value = int((max-min)/2)
-#     bind = dict(
-#         input="range",
-#         min=min,
-#         max=max,
-#         step=step
-#     )
-#     specification = dict(
-#         name="height_slider",
-#         value=value,
-#         bind=bind,
-#     )
-#     return specification
-
-
-# def get_length_slider(
-#         min=0,
-#         max=500,
-#         step=50,
-#     ):
-#     """
-#     """
-#     value = int((max-min)/2)
-#     bind = dict(
-#         input="range",
-#         min=min,
-#         max=max,
-#         step=step
-#     )
-#     specification = dict(
-#         name="length_slider",
-#         value=value,
-#         bind=bind,
-#     )
-#     return specification
+    def get_spec(self):
+        spec = {'signals': []}
+        for name in TreeMarkOptions.class_own_traits():
+            trait = getattr(self, name)
+            stuff = self.vega_signal(name, trait)
+            if stuff is not None:
+                spec['signals'].append(stuff)
+        return spec

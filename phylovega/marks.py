@@ -1,122 +1,143 @@
-from traitlets.config import Configurable
 from traitlets import (
     Unicode,
     Int,
     Float,
     default
 )
-from phylovega.traitlets import HexColorString, VegaConfigurable
+from phylovega.traitlets import (
+    VegaConfigurable,
+    VegaColorOption,
+    VegaMenuOption,
+    VegaRangeOption
+)
 
 
-class TreeMarks(VegaConfigurable):
-    """Style the marks in the tree visualization."""
-
+class TreeMarkOptions(VegaConfigurable):
     # --------------------------------------------------------
-    # Node traits.
+    # branch traits.
     # --------------------------------------------------------
 
-    branch_color = HexColorString(
+    branch_color = VegaColorOption(
         '#ccc', help='Color of tree edges.', config=True)
 
-    branch_width = Int(5, help='Width of the edges.', config=True)
+    branch_width = VegaRangeOption(5, help='Width of the edges.', config=True)
 
     # --------------------------------------------------------
     # Node traits.
     # --------------------------------------------------------
 
-    node_size = Int(70, help='Size of the nodes.').tag(config=True)
+    node_size = VegaRangeOption(70, help='Size of the nodes.').tag(config=True)
 
-    node_edge_width = Int(
+    node_edge_width = VegaRangeOption(
         1,
         help='Node edge width',
         config=True
     )
 
-    node_edge_color = HexColorString(
+    node_edge_color = VegaColorOption(
         '#000',
         help="Color of node edge",
         config=True
     )
 
-    node_color = HexColorString(
+    node_color = VegaColorOption(
         '#000', help='Color of the nodes.', config=True)
 
-    node_labels = Unicode(
+    node_labels = VegaMenuOption(
         'id', help='Column to use for node labels.', config=True)
 
-    node_text_size = Int(
+    node_text_size = VegaRangeOption(
         10, help="Node text size", config=True)
 
-    node_text_column = Unicode(
+    node_text_column = VegaMenuOption(
         'id', help='Column to label the nodes.', config=True)
 
-    node_text_xoffset = Float(
-        0, 
-        help="Node text X offset.", 
+    node_text_xoffset = VegaRangeOption(
+        0,
+        help="Node text X offset.",
         config=True
     )
 
-    node_text_yoffset = Float(
-        help="Node text Y offset.", 
+    node_text_yoffset = VegaRangeOption(
+        help="Node text Y offset.",
         config=True
     )
 
     @default('node_text_yoffset')
     def _default_node_text_yoffset(self):
-        return -(self.node_text_size/3)
+        try:
+            return -(self.node_text_size/3)
+        except:
+            return 0
 
-    node_text_color = HexColorString(
+    node_text_color = VegaColorOption(
         '#000', help='Hex string for text color.', config=True)
 
     # --------------------------------------------------------
     # Leaf traits
     # --------------------------------------------------------
 
-    leaf_size = Int(70, help='Size of the leaves.').tag(config=True)
+    leaf_size = VegaRangeOption(
+        70, help='Size of the leaves.').tag(config=True)
 
-    leaf_edge_width = Int(
+    leaf_edge_width = VegaRangeOption(
         1,
         help='leaf edge width',
         config=True
     )
 
-    leaf_edge_color = HexColorString(
+    leaf_edge_color = VegaColorOption(
         '#000',
         help="Color of leaf edge",
         config=True
     )
 
-    leaf_color = HexColorString(
+    leaf_color = VegaColorOption(
         '#000', help='Color of the leaves.', config=True)
 
-    leaf_labels = Unicode(
+    leaf_labels = VegaMenuOption(
         'id', help='Column to use for leaf labels.', config=True)
 
-    leaf_text_size = Int(
-        100, help="Leaf text size", config=True)
+    leaf_text_size = VegaRangeOption(
+        10, help="Leaf text size", config=True)
 
-    leaf_text_color = HexColorString(
+    leaf_text_color = VegaColorOption(
         '#000', help='Hex string for text color.', config=True)
 
-    leaf_text_column = Unicode(
+    leaf_text_column = VegaMenuOption(
         'id', help='Column to label the leafs.', config=True)
 
-    leaf_text_xoffset = Float(
+    leaf_text_xoffset = VegaRangeOption(
         0,
-        help="Leaf text X offset.", 
+        help="Leaf text X offset.",
         config=True
     )
 
-    leaf_text_yoffset = Float(
+    leaf_text_yoffset = VegaRangeOption(
         help="Leaf text Y offset.",
         config=True
     )
 
+    leaf_size = VegaRangeOption(0, help='Size of leaf node.', config=True)
+
     @default('leaf_text_yoffset')
     def _default_leaf_text_yoffset(self):
-        return -(self.leaf_text_size/3)
+        try:
+            return -(self.leaf_text_size/3)
+        except:
+            return 0
 
-    leaf_size = Int(0, help='Size of leaf node.', config=True)
+
+
+class TreeMarks(TreeMarkOptions):
+    """Style the marks in the tree visualization."""
+
+    def vega_mark(self, name, value):
+        _, key = self.vega_input(name, value)
+        if key in ['value', 'field']:
+            return {key: value}
+        elif key in ['signal']:
+            return {key: name}
 
     @property
     def branch_spec(self):
@@ -127,8 +148,8 @@ class TreeMarks(VegaConfigurable):
             'encode': {
                 'update': {
                     'path': {'field': 'path'},
-                    'stroke': {'value': self.branch_color},
-                    'strokeWidth': {'value': self.branch_width}
+                    'stroke': self.vega_mark('branch_color', self.branch_color),
+                    'strokeWidth': self.vega_mark('branch_width', self.branch_width),
                 }
             }
         }
@@ -141,14 +162,14 @@ class TreeMarks(VegaConfigurable):
             'from': {'data': 'leaves'},
             'encode':{
                 'enter': {
-                    'fill': {'value': self.leaf_color},
-                    'stroke': {'value': self.leaf_edge_color}
+                    'fill': self.vega_mark('leaf_color', self.leaf_color),
+                    'stroke': self.vega_mark('leaf_edge_color', self.leaf_edge_color)
                 },
                 'update': {
                     'x': {'field': 'x'},
                     'y': {'field': 'y'},
-                    'size': {'value': self.leaf_size},
-                    'strokeWidth': {'value': self.leaf_edge_width}
+                    'size': self.vega_mark('leaf_size', self.leaf_size),
+                    'strokeWidth': self.vega_mark('leaf_edge_width', self.leaf_edge_width)
                 }
             }
         }
@@ -161,14 +182,14 @@ class TreeMarks(VegaConfigurable):
             'from': {'data': 'nodes'},
             'encode': {
                 'enter': {
-                    'fill': {'value': self.node_color},
-                    'stroke': {'value': self.node_edge_color},
+                    'stroke': self.vega_mark('node_edge_color', self.node_edge_color),
                 },
                 'update': {
+                    'fill': self.vega_mark('node_color', self.node_color),
                     'x': {'field': 'x'},
                     'y': {'field': 'y'},
-                    'size': {'value': self.node_size},
-                    'strokeWidth': {'value': self.node_edge_width}
+                    'size': self.vega_mark('node_size', self.node_size),
+                    'strokeWidth': self.vega_mark('node_edge_width', self.node_edge_width)
                 }
             }
         }
@@ -181,16 +202,15 @@ class TreeMarks(VegaConfigurable):
             'from': {'data': 'leaves'},
             'encode': {
                 'enter': {
-                    'fill': {'value': self.leaf_text_color},
-                    'text': {'field': self.leaf_text_column}
+                    'fill': self.vega_mark('leaf_text_color', self.leaf_text_color),
+                    'text': self.vega_mark('leaf_text_column', self.leaf_text_column)
                 },
                 'update': {
-                    'fontSize': {'value': self.leaf_text_size},
+                    'fontSize': self.vega_mark('leaf_text_size', self.leaf_text_size),
                     'x': {'field': 'x'},
                     'y': {'field': 'y'},
-                    'dx': {'value': self.leaf_text_xoffset},
-                    # Flip the sign--vega defines positive as down
-                    'dy': {'value': -self.leaf_text_yoffset} 
+                    'dx': self.vega_mark('leaf_text_xoffset', self.leaf_text_xoffset),
+                    'dy': self.vega_mark('leaf_text_yoffset', self.leaf_text_yoffset)
                 }
             }
         }
@@ -203,16 +223,15 @@ class TreeMarks(VegaConfigurable):
             'from': {'data': 'nodes'},
             'encode': {
                 'enter': {
-                    'fill': {'value': self.node_text_color},
-                    'text': {'field': self.node_text_column}
+                    'fill': self.vega_mark('node_text_color', self.node_text_color),
+                    'text': self.vega_mark('node_text_column', self.node_text_column)
                 },
                 'update': {
-                    'fontSize': {'value': self.node_text_size},
+                    'fontSize': self.vega_mark('node_text_size', self.node_text_size),
                     'x': {'field': 'x'},
                     'y': {'field': 'y'},
-                    'dx': {'value': self.node_text_xoffset},
-                    # Flip the sign--vega defines positive as down
-                    'dy': {'value': -self.node_text_yoffset}
+                    'dx': self.vega_mark('node_text_xoffset', self.node_text_xoffset),
+                    'dy': self.vega_mark('node_text_yoffset', self.node_text_yoffset)
                 }
             }
         }

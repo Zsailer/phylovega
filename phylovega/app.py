@@ -6,10 +6,10 @@ from traitlets import (
     Dict,
     List
 )
-from phylovega.traitlets import HexColorString
 from .chart import BaseTreeChart
 from .data import TreeData
 from .marks import TreeMarks
+from .signals import TreeSignals
 
 VEGA_VERSION = 4
 
@@ -34,7 +34,7 @@ for trait in traits.values():
     trait_docs.append('{} : {}\n    {}\n'.format(name, klass, doc))
 
 
-docstring = """Tree Chart
+docstring = """A tree visualizaton in Vega.
 
 Parameters
 ----------
@@ -64,6 +64,38 @@ class TreeChart(Application):
         self.data = data
         self.init_classes()
 
+    @classmethod
+    def from_dendropy(cls, tree, config={}, **kwargs):
+        """Read from DendroPy Tree."""
+        try:
+            import phylopandas as pd
+            df = pd.read_dendropy(tree)
+            data = df.to_dict(orient='records')
+            return cls(data=data, config={}, **kwargs)
+        except ImportError:
+            Exception("DendroPy and Phylopandas must be installed.")
+
+    @classmethod
+    def from_phylopandas(cls, df, config={}, **kwargs):
+        """Read from phylopandas DataFrame"""
+        try:
+            data = df.to_dict(orient='records')
+            return cls(data=data, config={}, **kwargs)
+        except ImportError:
+            Exception("DendroPy and Phylopandas must be installed.")
+
+    @classmethod
+    def from_newick(cls, newick_file, config={}, **kwargs):
+        """Read tree from newick file."""
+        try:
+            import phylopandas as pd
+            df = pd.read_newick(newick_file)
+            data = df.to_dict(orient='records')
+            return cls(data=data, config={}, **kwargs)
+        except ImportError:
+            Exception("DendroPy and Phylopandas must be installed.")
+
+
     def _repr_mimebundle_(self, include=None, exclude=None):
         mimetype = 'application/vnd.vega.v{}+json'.format(VEGA_VERSION)
         spec = self.get_spec()
@@ -82,9 +114,9 @@ class TreeChart(Application):
             chart_height=self.base_chart.height,
             chart_width=self.base_chart.width,
             config=self.config,
-            
         )
         self.tree_marks = TreeMarks(config=self.config)
+        self.tree_signals = TreeSignals(config=self.config)
 
     def initialize(self, argv=None):
         """"""
@@ -101,6 +133,7 @@ class TreeChart(Application):
         spec.update(**self.base_chart.get_spec())
         spec.update(**self.tree_data.get_spec())
         spec.update(**self.tree_marks.get_spec())
+        spec.update(**self.tree_signals.get_spec())
         return spec
 
     def show(self):
