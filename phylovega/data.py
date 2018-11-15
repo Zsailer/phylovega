@@ -80,7 +80,6 @@ class TreeData(VegaConfigurable):
     @property
     def data_transform_spec(self):
         """Layout specification as Python dictionary."""
-        print(self.width_scale)
         return {
             'name': 'tree',
             'values': self.data,

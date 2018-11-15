@@ -8,7 +8,7 @@ from traitlets import (
 )
 from .chart import BaseTreeChart
 from .data import TreeData
-from .marks import TreeMarks
+from .marks import TreeMarkOptions, TreeMarks
 from .signals import TreeSignals
 
 VEGA_VERSION = 4
@@ -16,7 +16,9 @@ VEGA_VERSION = 4
 classes = [
     BaseTreeChart,
     TreeData,
-    TreeMarks
+    TreeMarkOptions,
+    TreeMarks,
+    TreeSignals
 ]
 
 traits = {}
@@ -34,7 +36,7 @@ for trait in traits.values():
     trait_docs.append('{} : {}\n    {}\n'.format(name, klass, doc))
 
 
-docstring = """A tree visualizaton in Vega.
+docstring = """A tree visualization in Vega.
 
 Parameters
 ----------
@@ -57,6 +59,7 @@ class TreeChart(Application):
     aliases = Dict(aliases, help="Dictionary of aliases.")
 
     def __init__(self, data=data, config={}, **kwargs):
+        """"""
         config = Config(config)
         config.update(**kwargs)
         super(TreeChart, self).__init__(config=config, **kwargs)
