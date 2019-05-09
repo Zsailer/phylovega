@@ -36,7 +36,7 @@ for trait in traits.values():
     trait_docs.append('{} : {}\n    {}\n'.format(name, klass, doc))
 
 
-docstring = """A tree visualization in Vega.
+docstring = """Visualize Tree in Vega.
 
 Parameters
 ----------
@@ -58,9 +58,9 @@ class TreeChart(Application):
     classes = List(classes, help="List of classes to expose to config.")
     aliases = Dict(aliases, help="Dictionary of aliases.")
 
-    def __init__(self, data=data, config={}, **kwargs):
+    def __init__(self, data=[], config=None, **kwargs):
         """"""
-        config = Config(config)
+        config = Config()#config=config)
         config.update(**kwargs)
         super(TreeChart, self).__init__(config=config, **kwargs)
 
@@ -83,7 +83,7 @@ class TreeChart(Application):
         """Read from phylopandas DataFrame"""
         try:
             data = df.to_dict(orient='records')
-            return cls(data=data, config={}, **kwargs)
+            return cls(data=data, config=config, **kwargs)
         except ImportError:
             Exception("DendroPy and Phylopandas must be installed.")
 
@@ -97,7 +97,6 @@ class TreeChart(Application):
             return cls(data=data, config={}, **kwargs)
         except ImportError:
             Exception("DendroPy and Phylopandas must be installed.")
-
 
     def _repr_mimebundle_(self, include=None, exclude=None):
         mimetype = 'application/vnd.vega.v{}+json'.format(VEGA_VERSION)
@@ -125,10 +124,6 @@ class TreeChart(Application):
         """"""
         self.parse_command_line(argv=argv)
         self.init_classes()
-
-    def start(self):
-        """"""
-        pass
 
     def get_spec(self):
         """Get specification as Python dictionary."""

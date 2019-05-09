@@ -4,8 +4,6 @@
 
 Declarative tree visualizations in Python powered by Vega.
 
-*Warning*: This package is still under development. Things may still change rapidly.
-
 **Declarative Grammar**
 
 ```python
@@ -36,23 +34,23 @@ chart = TreeChart.read_newick(
 
 Use Vega grammar
 
-![](docs/phylovega-example.gif)
+![](docs/phylovega.gif)
 
 ## How does it work?
 
-PhyloVega defines uses Vega grammar to draw phylogenetic trees. It accepts a PhyloPandas DataFrame as input and returns a Vega specification in JSON.
+PhyloVega defines a Vega grammar (specifically, a set of transforms) to draw phylogenetic trees. 
 
 ## Why?
 
 Python is due for a simple, interactive phylogenetic tree viewer. Vega has done
-most of the heavy lifting here. PhyloVega simply leverages Vega
-and gets simple interactivity for free!
+most of the heavy lifting here. PhyloVega simply leverages Vega transform specifications for building interactive visualizations.
 
 ## In the works
 
 Here is a list of features that will eventually make it into PhyloVega.
 
-* Interactive!
+* More Interactivity
+* Collapible Clades.
 * Circular trees
 * ... (feel free to add to this list).
 
@@ -71,7 +69,7 @@ pip install -e .
 
 ## Dependencies
 
-PhyloVega uses the Vega3 specification. To use in the jupyter notebook, you must install the following Python dependencies.
+PhyloVega uses the Vega4 specification. It works out-of-the-box with JupyterLab. 
 
+* [JupyterLab](): The next generation Jupyter notebook.
 * [PhyloPandas](https://github.com/Zsailer/phylopandass): Pandas DataFrame for Phylogenetics
-* [ipyvega](https://github.com/vega/ipyvega): IPython/Jupyter notebook module for Vega and Vega-Lite (a visualization grammar).
