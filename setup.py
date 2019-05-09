@@ -23,7 +23,7 @@ VERSION = None
 # What packages are required for this module to be executed?
 REQUIRED = [
     'phylopandas',
-    'vega3'
+    'vega'
 ]
 
 
