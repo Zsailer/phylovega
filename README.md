@@ -25,6 +25,8 @@ chart = TreeChart.read_newick(
     edge_width=2,
     edge_color="#000",
 )
+
+chart.display()
 ```
 
 

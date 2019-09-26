@@ -11,7 +11,9 @@ from .data import TreeData
 from .marks import TreeMarkOptions, TreeMarks
 from .signals import TreeSignals
 
-VEGA_VERSION = 4
+from vega.vega import Vega
+
+VEGA_VERSION = 5
 
 classes = [
     BaseTreeChart,
@@ -46,7 +48,7 @@ data :
 {}
 """.format('\n'.join(trait_docs))
 
-class TreeChart(Application):
+class TreeChart(Application, Vega):
     __doc__ = docstring
 
     name = Unicode("TreeChart")
@@ -63,7 +65,7 @@ class TreeChart(Application):
         config = Config()#config=config)
         config.update(**kwargs)
         super(TreeChart, self).__init__(config=config, **kwargs)
-
+        self.opt = {}
         self.data = data
         self.init_classes()
 
@@ -98,10 +100,19 @@ class TreeChart(Application):
         except ImportError:
             Exception("DendroPy and Phylopandas must be installed.")
 
-    def _repr_mimebundle_(self, include=None, exclude=None):
-        mimetype = 'application/vnd.vega.v{}+json'.format(VEGA_VERSION)
-        spec = self.get_spec()
-        return {mimetype: spec}
+    @property
+    def spec(self):
+        return self.get_spec()
+
+    # def _repr_mimebundle_(self, include=None, exclude=None):
+        
+    #     out = super()._repr_mimebundle_(include=include, exclude=exclude)
+    #     breakpoint()
+    #     return out
+    # def _repr_mimebundle_(self, include=None, exclude=None):
+    #     mimetype = 'application/vnd.vega.v{}+json'.format(VEGA_VERSION)
+    #     spec = self.get_spec()
+    #     return {mimetype: spec}
 
     @classmethod
     def _launch_app(cls, *args, **kwargs):
@@ -133,11 +144,6 @@ class TreeChart(Application):
         spec.update(**self.tree_marks.get_spec())
         spec.update(**self.tree_signals.get_spec())
         return spec
-
-    def show(self):
-        """Show the graph."""
-        bundle = self._repr_mimebundle_()
-        display(bundle, raw=True)
 
 
 main = TreeChart._launch_app
